@@ -1,6 +1,6 @@
 #!/bin/bash
 
-
+chmod +x ./bin -R
 cp ./bin/* /usr/bin/ -a
 
 if [ ! -f "/usr/bin/cfssl" ]; then

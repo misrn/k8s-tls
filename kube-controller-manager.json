@@ -1,0 +1,8 @@
+{
+  "CN": "system:kube-controller-manager",
+  "hosts": [""],
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "CN": "system:kube-scheduler",
+  "hosts": [""],
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  }
+}

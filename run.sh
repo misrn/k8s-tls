@@ -13,7 +13,8 @@ echo "/usr/bin/cfssljson 不存在，异常退出!"
 exit 1
 fi
 
-ip="127.0.0.1"
+ip="********"
+NODE="*****"
 
 cfssl gencert -initca ca.json | cfssljson -bare ca && mv ca.pem ca.crt && mv ca-key.pem ca.key
 cfssl gencert -initca front-proxy-ca.json | cfssljson -bare front-proxy-ca  && mv front-proxy-ca.pem front-proxy-ca.crt && mv front-proxy-ca-key.pem front-proxy-ca.key
@@ -27,31 +28,28 @@ cfssl gencert -ca=front-proxy-ca.crt -ca-key=front-proxy-ca.key -config=config.j
 openssl genrsa -out sa.key 1024  &&   openssl rsa -in sa.key -pubout -out sa.pub
 
   
-#kubectl config set-cluster kubernetes --certificate-authority=ca.crt --embed-certs=true --server=https://${ip}:6443 --kubeconfig=admin.conf
-#kubectl config set-credentials kubernetes-admin --client-certificate=kubernetes-admin.crt --embed-certs=true --client-key=kubernetes-admin.key --kubeconfig=admin.conf
-#kubectl config set-context kubernetes-admin@kubernetes --cluster=kubernetes --user=kubernetes-admin --kubeconfig=admin.conf
-#kubectl config use-context kubernetes-admin@kubernetes --kubeconfig=admin.conf
+kubectl config set-cluster kubernetes --certificate-authority=ca.crt --embed-certs=true --server=https://${ip}:6443 --kubeconfig=admin.conf
+kubectl config set-credentials kubernetes-admin --client-certificate=kubernetes-admin.crt --embed-certs=true --client-key=kubernetes-admin.key --kubeconfig=admin.conf
+kubectl config set-context kubernetes-admin@kubernetes --cluster=kubernetes --user=kubernetes-admin --kubeconfig=admin.conf
+kubectl config use-context kubernetes-admin@kubernetes --kubeconfig=admin.conf
 
-#kubectl config set-cluster kubernetes --certificate-authority=ca.crt --embed-certs=true --server=https://${ip}:6443 --kubeconfig=kubelet.conf
-#kubectl config set-credentials system:node:docker01 --client-certificate=kubelet.crt --embed-certs=true --client-key=kubelet.key --kubeconfig=kubelet.conf
-#kubectl config set-context system:node:docker01@kubernetes --cluster=kubernetes --user=system:node:docker01 --kubeconfig=kubelet.conf
-#kubectl config use-context system:node:docker01@kubernetes --kubeconfig=kubelet.conf
+kubectl config set-cluster kubernetes --certificate-authority=ca.crt --embed-certs=true --server=https://${ip}:6443 --kubeconfig=kubelet.conf
+kubectl config set-credentials system:node:${NODE} --client-certificate=kubelet.crt --embed-certs=true --client-key=kubelet.key --kubeconfig=kubelet.conf
+kubectl config set-context system:node:${NODE}@kubernetes --cluster=kubernetes --user=system:node:${NODE} --kubeconfig=kubelet.conf
+kubectl config use-context system:node:${NODE}@kubernetes --kubeconfig=kubelet.conf
 
-#kubectl config set-cluster kubernetes --certificate-authority=ca.crt --embed-certs=true --server=https://${ip}:6443 --kubeconfig=controller-manager.conf
-#kubectl config set-credentials system:kube-controller-manager --client-certificate=kube-controller-manager.crt --embed-certs=true --client-key=kube-controller-manager.key --kubeconfig=controller-manager.conf
-#kubectl config set-context system:kube-controller-manager@kubernetes --cluster=kubernetes --user=system:kube-controller-manager --kubeconfig=controller-manager.conf
-#kubectl config use-context system:kube-controller-manager@kubernetes --kubeconfig=controller-manager.conf
+kubectl config set-cluster kubernetes --certificate-authority=ca.crt --embed-certs=true --server=https://${ip}:6443 --kubeconfig=controller-manager.conf
+kubectl config set-credentials system:kube-controller-manager --client-certificate=kube-controller-manager.crt --embed-certs=true --client-key=kube-controller-manager.key --kubeconfig=controller-manager.conf
+kubectl config set-context system:kube-controller-manager@kubernetes --cluster=kubernetes --user=system:kube-controller-manager --kubeconfig=controller-manager.conf
+kubectl config use-context system:kube-controller-manager@kubernetes --kubeconfig=controller-manager.conf
 
-#kubectl config set-cluster kubernetes --certificate-authority=ca.crt --embed-certs=true --server=https://${ip}:6443 --kubeconfig=scheduler.conf
-#kubectl config set-credentials system:kube-scheduler --client-certificate=kube-scheduler.crt --embed-certs=true --client-key=kube-scheduler.key --kubeconfig=scheduler.conf
-#kubectl config set-context system:kube-scheduler@kubernetes --cluster=kubernetes --user=system:kube-scheduler --kubeconfig=scheduler.conf
-#kubectl config use-context system:kube-scheduler@kubernetes  --kubeconfig=scheduler.conf
+kubectl config set-cluster kubernetes --certificate-authority=ca.crt --embed-certs=true --server=https://${ip}:6443 --kubeconfig=scheduler.conf
+kubectl config set-credentials system:kube-scheduler --client-certificate=kube-scheduler.crt --embed-certs=true --client-key=kube-scheduler.key --kubeconfig=scheduler.conf
+kubectl config set-context system:kube-scheduler@kubernetes --cluster=kubernetes --user=system:kube-scheduler --kubeconfig=scheduler.conf
+kubectl config use-context system:kube-scheduler@kubernetes  --kubeconfig=scheduler.conf
 
 mkdir -p /etc/kubernetes/pki
-cp apiserver.crt apiserver.key apiserver-kubelet-client.crt apiserver-kubelet-client.key ca.crt ca.key  front-proxy-ca.crt  front-proxy-ca.key  front-proxy-client.crt  front-proxy-client.key  sa.key  sa.pub /etc/kubernetes/pki/
+cp *.crt  *.csr *.key *.pub  /etc/kubernetes/pki/
+cp *.conf /etc/kubernetes/
 
-rm *.crt  *.csr *.key *.pub -rf
-
-#cp admin.conf controller-manager.conf kubelet.conf scheduler.conf /etc/kubernetes/
-
-
+rm *.crt  *.csr *.key *.pub *.conf -rf

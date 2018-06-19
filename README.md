@@ -8,8 +8,8 @@
         {
             "CN": "kube-apiserver",
             "hosts": [
-              "172.16.50.112",
-              "docker01",
+              "xx.xx.xx.xx",
+              "nodename",
               "10.96.0.1",
               "kubernetes",
               "kubernetes.default",
@@ -24,3 +24,15 @@
         }
      
 4. 执行./run.sh
+5. 进入/etc/kubernetes/pki/编辑node.sh文件
+
+        ip="xx.xx.xx.xx"
+        NODE="nodename"
+        
+6. 编辑kubelet.json文件
+
+        .....
+        "CN": "system:node:nodename",
+        ......
+
+7. 执行./node.sh

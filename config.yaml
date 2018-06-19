@@ -1,0 +1,24 @@
+apiVersion: kubeadm.k8s.io/v1alpha1
+kind: MasterConfiguration
+kubernetesVersion: v1.10.4
+networking:
+  podSubnet: 10.244.0.0/16
+apiServerCertSANs:
+- xx01
+- xx02
+- xx03
+- k8s01
+- k8s02
+- 172.16.50.131
+- 172.16.50.132
+- 172.16.50.104
+- 172.16.50.111
+- 172.16.50.112
+- 172.16.50.200
+apiServerExtraArgs:
+  endpoint-reconciler-type: "lease"
+etcd:
+  endpoints:
+  - http://172.16.50.124:2379
+token: "deed3a.b3542929fcbce0f0"
+tokenTTL: "0"

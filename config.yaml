@@ -15,6 +15,7 @@ apiServerCertSANs:
 - 172.16.50.111
 - 172.16.50.112
 - 172.16.50.200
+- 172.16.50.201
 apiServerExtraArgs:
   endpoint-reconciler-type: "lease"
 etcd:
